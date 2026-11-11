@@ -153,14 +153,6 @@
   .body.clamped{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
   .readmore{background:none;border:none;color:var(--rose);font-weight:600;font-size:14px;padding:8px 0 0;letter-spacing:.02em}
   .top{position:relative}
-  .psalm-top{display:none}
-  @media (min-width:1400px){
-    .psalm-top{display:block;position:absolute;top:0;left:auto;right:calc((100% - 100vw) / 2 + 28px);width:330px;margin:0;padding:22px 24px;text-align:left}
-    .psalm-top .psalm-ref{text-align:left}
-    .psalm-top p.v{font-size:18px;line-height:1.45;margin:0}
-    .psalm-top sup{font-family:Montserrat,sans-serif;font-style:normal;font-size:10px;color:var(--gold);font-weight:600;margin-right:2px}
-    .psalm-side{display:none}
-  }
   .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
   .gate .card{width:100%;max-width:400px;text-align:center;padding:40px 32px}
   .gate h1{font-size:44px}
@@ -211,9 +203,6 @@
     <div class="rule"></div>
     <p class="status" id="status"></p>
   </header>
-  <section class="card psalm psalm-top" aria-label="Psalm 23"><p class="psalm-ref">Psalm 23 · WEB</p>
-    <p class="v"><sup>1</sup>The LORD is my shepherd; I shall lack nothing. <sup>2</sup>He makes me lie down in green pastures. He leads me beside still waters. <sup>3</sup>He restores my soul. He guides me in the paths of righteousness for his name&rsquo;s sake. <sup>4</sup>Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me. <sup>5</sup>You prepare a table before me in the presence of my enemies. You anoint my head with oil. My cup runs over. <sup>6</sup>Surely goodness and loving kindness shall follow me all the days of my life, and I will dwell in the LORD&rsquo;s house forever.</p>
-  </section>
   </div>
   <div class="poster hidden" id="poster"><a id="posterLink" target="_blank" rel="noopener">✎&nbsp; Post an update</a><p id="posterNote"></p></div>
   <nav class="links" id="links"></nav>
@@ -252,7 +241,7 @@
     <aside class="side hidden" id="side">
       <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
       <section class="card gallery hidden" id="gallery"><h3>Photos</h3><p class="count" id="gCount"></p><div class="grid" id="gGrid"></div></section>
-      <section class="card psalm psalm-side"><p class="psalm-ref">Psalm 23 · WEB</p>
+      <section class="card psalm psalm-side"><p class="psalm-ref">Psalm 23</p>
         <p>The LORD is my shepherd; I shall lack nothing.</p>
         <p>He makes me lie down in green pastures. He leads me beside still waters.</p>
         <p>He restores my soul. He guides me in the paths of righteousness for his name&rsquo;s sake.</p>
@@ -316,7 +305,6 @@
     if (Date.now() - lastLog > 6 * 3600 * 1000){ logVisit(first, last); store.set("du_logged", String(Date.now())); }
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
     render();
-    requestAnimationFrame(fitPsalm);
   }
   (async () => {
     const kb = store.get("du_key"), exp = Number(store.get("du_exp") || 0), first = store.get("du_first"), last = store.get("du_last");
@@ -485,17 +473,6 @@
     $("wThanks").classList.remove("hidden");
   };
 
-  function fitPsalm(){
-    const ps = document.querySelector(".psalm-top"), gl = $("glance");
-    if (!ps || !gl) return;
-    gl.style.marginTop = "";
-    if (getComputedStyle(ps).display === "none" || gl.classList.contains("hidden")) return;
-    const need = ps.getBoundingClientRect().bottom + 24 - gl.getBoundingClientRect().top;
-    if (need > 0) gl.style.marginTop = need + "px";
-  }
-  addEventListener("resize", fitPsalm);
-  if (document.fonts) document.fonts.ready.then(fitPsalm);
-  setInterval(fitPsalm, 1500);
   function openLight(src){ const lb = $("lightbox"); lb.querySelector("img").src = src; lb.classList.remove("hidden"); }
   $("lightbox").onclick = () => $("lightbox").classList.add("hidden");
 })();
