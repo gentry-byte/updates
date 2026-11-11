@@ -142,8 +142,8 @@
   .poster a{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;background:var(--rose);color:#fff;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:.02em;box-shadow:0 6px 18px rgba(185,122,134,.28)}
   .poster p{color:var(--muted);font-size:12.5px;margin:8px 0 0}
   .psalm{text-align:center;background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 80%,var(--rose-soft)))}
-  .psalm .psalm-ref{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 12px}
-  .psalm p{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:19.5px;line-height:1.5;color:var(--ink);margin:0 0 9px}
+  .psalm .psalm-ref{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 12px}
+  .psalm p{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:var(--ink);margin:0 0 9px}
   .psalm p:last-child{margin:0}
   .wall .note{border-top:1px solid var(--line);padding:12px 0}
   .wall .note:first-of-type{border-top:none;padding-top:4px}
@@ -232,9 +232,7 @@
         <div class="row"><span class="err" id="needErr"></span><button class="btn" id="needCancel">Cancel</button><button class="btn primary" id="needSave">Save</button></div>
       </div>
     </div>
-    <section class="card wall" id="wall"><h3>Words of encouragement</h3><p class="count" id="wCount">Share a verse, a prayer or a kind word for Dani</p>
-        <div id="wList"></div>
-        <button class="more hidden" id="wMore" type="button">See all</button>
+    <section class="card wall" id="wall"><h3>Words of encouragement</h3><p class="count" id="wCount">Share a verse, a prayer or a kind word for Dani. Messages are private and not shown on this page.</p>
         <div style="margin-top:14px"><button class="btn" id="wOpen" type="button">Share a verse or prayer</button></div>
         <div class="hidden" id="wForm">
           <textarea id="wText" maxlength="1000" placeholder="A verse, a prayer, or a few words for Dani"></textarea>
@@ -445,28 +443,9 @@
     all.forEach(n => $("gGrid").appendChild(img(n)));
   }
 
-  function renderNotes(notes, admin, onToggle){
-    const list = $("wList"); list.textContent = "";
-    const show = admin ? notes : notes.filter(n => !n.hidden);
-    const visible = notes.filter(n => !n.hidden).length;
-    $("wCount").textContent = visible ? visible + (visible === 1 ? " message" : " messages") : (admin ? "No messages yet" : "Share a verse, a prayer or a kind word for Dani");
-    const expanded = $("wMore").dataset.open === "1";
-    show.forEach((n, i) => {
-      const d = document.createElement("div"); d.className = "note" + (n.hidden ? " hidden-note" : "");
-      if (!expanded && i >= 2) d.classList.add("hidden");
-      if (!expanded) d.classList.add("short");
-      const m = document.createElement("p"); m.className = "msg"; m.textContent = n.message || ""; d.appendChild(m);
-      const f = document.createElement("p"); f.className = "from";
-      let when = ""; try { when = new Date(n.createdAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}); } catch {}
-      f.textContent = (n.name || "A friend") + (when ? " · " + when : "") + (n.hidden ? " · hidden" : ""); d.appendChild(f);
-      if (admin && onToggle){ const b = document.createElement("button"); b.className = "btn tiny"; b.style.marginTop = "6px"; b.textContent = n.hidden ? "Show" : "Hide"; b.onclick = () => onToggle(n, b); d.appendChild(b); }
-      list.appendChild(d);
-    });
-    $("wMore").classList.toggle("hidden", show.length <= 2 && !show.some(n => (n.message || "").length > 140));
-    $("wMore").textContent = expanded ? "Show fewer" : (show.length > 2 ? "See all " + show.length : "Read more");
-  }
+  function renderNotes(){}
+
   const WALL_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSfOp45BbtN5GA-aytikh5SnP0UClq0CzzfbDPhYuSkZLF9nTQ/formResponse";
-  $("wMore").onclick = () => { $("wMore").dataset.open = $("wMore").dataset.open === "1" ? "" : "1"; renderNotes((data && data.notes) || [], false); };
   $("wOpen").onclick = () => { $("wForm").classList.remove("hidden"); $("wOpen").classList.add("hidden"); $("wThanks").classList.add("hidden"); $("wText").focus(); };
   $("wCancel").onclick = () => { $("wForm").classList.add("hidden"); $("wOpen").classList.remove("hidden"); };
   $("wSend").onclick = () => {
@@ -476,7 +455,7 @@
     try { const body = new URLSearchParams(); body.set("entry.1148264042", (first + " " + last).trim()); body.set("entry.238677170", msg); fetch(WALL_FORM, {method:"POST", mode:"no-cors", body}).catch(()=>{}); } catch {}
     $("wText").value = ""; $("wErr").textContent = "";
     $("wForm").classList.add("hidden"); $("wOpen").classList.remove("hidden");
-    $("wThanks").textContent = "Thank you" + (first ? ", " + first : "") + ". Your message will appear here at the next refresh (7:40am or 5:40pm).";
+    $("wThanks").textContent = "Thank you" + (first ? ", " + first : "") + ". Your message was sent privately to Dani’s family.";
     $("wThanks").classList.remove("hidden");
   };
 
