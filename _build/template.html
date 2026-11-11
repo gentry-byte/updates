@@ -313,7 +313,7 @@
     const who = POSTERS[((store.get("du_first")||"") + " " + (store.get("du_last")||"")).trim().toLowerCase().replace(/\s+/g," ")];
     if (who && safeUrl(c.postFormUrl)){
       $("posterLink").href = safeUrl(c.postFormUrl);
-      $("posterNote").textContent = "Only you see this, " + who + ". Gentry reviews each post before it goes live.";
+      $("posterNote").textContent = "Only you see this, " + who + ". The page refreshes at 7:40am and 5:40pm. If you need a post up sooner, let Gentry know.";
       $("poster").classList.remove("hidden");
     }
     renderGlance(c, false);
