@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Dani's Updates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbf7f2; --card:#fffdfa; --ink:#3d3a4a; --head:#505c80; --muted:#8a8090; --line:#eee3da;
+    --rose:#b97a86; --rose-soft:#f5e6e4; --gold:#c9a65a; --gold-soft:#e1c37a; --on-rose:#fff;
+  }
+  :root{color-scheme:light}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.75 Montserrat,system-ui,sans-serif}
+  body{background:
+    radial-gradient(900px 420px at 15% -80px, color-mix(in srgb,var(--rose-soft) 90%,transparent), transparent 70%),
+    radial-gradient(700px 380px at 95% 0, color-mix(in srgb,var(--gold-soft) 22%,transparent), transparent 70%),
+    var(--bg) no-repeat}
+  .wrap{max-width:1000px;margin:0 auto;padding:56px 22px 90px}
+  header,.links,.admin-bar,#settings,#composer,footer{max-width:660px;margin-left:auto;margin-right:auto}
+  header{text-align:center;margin:0 0 34px}
+  .lotus{width:64px;height:auto;color:var(--gold);margin:0 auto 10px;display:block}
+  .portrait{width:132px;height:132px;border-radius:50%;object-fit:cover;object-position:50% 18%;display:block;margin:0 auto 18px;border:3px solid var(--card);box-shadow:0 0 0 1px var(--gold-soft),0 8px 26px rgba(80,60,70,.14)}
+  .eyebrow{font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;font-weight:600}
+  h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:52px;line-height:1.05;margin:0;color:var(--head)}
+  .rule{width:84px;height:1px;background:var(--gold-soft);margin:18px auto;position:relative}
+  .rule::after{content:"";position:absolute;left:50%;top:-3px;width:7px;height:7px;background:var(--gold-soft);transform:translateX(-50%) rotate(45deg)}
+  .status{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:21px;line-height:1.45;color:var(--ink);margin:0 auto;max-width:520px;white-space:pre-wrap}
+  .links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:0;margin-bottom:40px}
+  .links:has(+ .help-note:not(.hidden)){margin-bottom:14px}
+  .help-note{text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6;max-width:440px;margin:0 auto 40px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;background:var(--card);color:var(--head);text-decoration:none;font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);box-shadow:0 2px 10px rgba(80,60,70,.05);transition:border-color .2s,transform .2s}
+  .pill:hover{border-color:var(--gold-soft);transform:translateY(-1px)}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--rose)}
+  button{font:inherit;cursor:pointer}
+  .btn{padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:500;font-size:14px}
+  .btn.primary{background:var(--rose);border-color:var(--rose);color:var(--on-rose)}
+  .btn.danger{color:#b4413f}
+  .btn:disabled{opacity:.5;cursor:default}
+  .admin-bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:0;margin-bottom:28px}
+  .view-toggle{display:inline-flex;align-items:center;gap:10px}
+  .view-toggle .sw{width:34px;height:20px;border-radius:999px;background:var(--line);position:relative;transition:background .2s}
+  .view-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+  .view-toggle[aria-pressed="true"]{border-color:var(--gold-soft)}
+  .view-toggle[aria-pressed="true"] .sw{background:var(--gold)}
+  .view-toggle[aria-pressed="true"] .sw::after{left:16px}
+  body.family-view .admin-only{display:none!important}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 30px 28px;margin:0 0 22px;box-shadow:0 6px 24px rgba(80,60,70,.05)}
+  .post{position:relative}
+  .post::before{content:"";position:absolute;left:30px;right:30px;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold-soft),transparent);opacity:.8}
+  .meta{color:var(--gold);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:0 0 6px}
+  .post h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:30px;line-height:1.2;margin:0 0 14px;color:var(--head)}
+  .body{white-space:pre-wrap;margin:0}
+  .post-text{min-width:0}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+  @media (min-width:900px){ .layout.with-gallery{grid-template-columns:minmax(0,1fr) 290px;gap:32px;align-items:start} .side{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow:auto} }
+  .side .card{padding:24px 22px;margin-bottom:18px}
+  .archive ol{list-style:none;margin:0;padding:0}
+  .archive li+li{border-top:1px solid var(--line)}
+  .archive a{display:block;padding:10px 0;text-decoration:none;color:var(--ink)}
+  .archive a:hover .t{color:var(--rose)}
+  .archive .d{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .archive .t{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:19px;font-weight:600;line-height:1.25;color:var(--head);transition:color .2s}
+  .post{scroll-margin-top:20px}
+  .post.flash{box-shadow:0 0 0 2px var(--gold-soft),0 6px 24px rgba(80,60,70,.08);transition:box-shadow .4s}
+  .side h3,.gallery h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0 0 4px}
+  .side .count{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
+  .gallery .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block;background:var(--rose-soft)}
+  @media (max-width:899px){ .gallery .grid{grid-template-columns:repeat(4,1fr);max-height:none} }
+  .photos{display:grid;gap:8px;margin:20px 0 0}
+  .photos.n1{grid-template-columns:1fr}
+  .photos.n2,.photos.n4{grid-template-columns:1fr 1fr}
+  .photos.n3,.photos.n5,.photos.n6{grid-template-columns:1fr 1fr 1fr}
+  .photos img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;cursor:zoom-in;display:block;background:var(--rose-soft)}
+  .photos.n1 img{aspect-ratio:auto;max-height:540px}
+  .post-actions{display:flex;gap:8px;margin-top:18px}
+  .post-actions .btn{padding:6px 14px;font-size:13px}
+  label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted);margin:16px 0 6px}
+  input[type=text],input[type=url],input[type=date],textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+  input:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--rose) 40%,transparent);border-color:var(--rose)}
+  textarea{min-height:180px;resize:vertical}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .thumb{position:relative;width:76px;height:76px}
+  .thumb img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+  .thumb button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:22px;padding:0}
+  .row{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;align-items:center}
+  .err{color:#b4413f;font-size:13px}
+  .empty{color:var(--muted);text-align:center;padding:40px 0;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:20px}
+  .hidden{display:none!important}
+  .lightbox{position:fixed;inset:0;background:rgba(20,16,24,.92);display:flex;align-items:center;justify-content:center;z-index:10;cursor:zoom-out}
+  .lightbox img{max-width:94vw;max-height:92vh;border-radius:8px}
+  footer{color:var(--muted);font-size:12px;letter-spacing:.06em;text-align:center;margin-top:48px}
+  footer .lotus{width:28px;margin-bottom:6px;opacity:.7}
+  header,.links,.admin-bar,#settings,#composer,footer,.help-note{margin-left:auto!important;margin-right:auto!important}
+  @media (max-width:520px){ h1{font-size:42px} .card{padding:24px 20px} .post::before{left:20px;right:20px} }
+
+  .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .gate .card{width:100%;max-width:400px;text-align:center;padding:40px 32px}
+  .gate h1{font-size:44px}
+  .gate p.sub{color:var(--muted);margin:10px 0 22px;font-size:14px}
+  .gate form{text-align:left}
+  .gate .names{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .gate input[type=password]{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+  .gate .btn{width:100%;margin-top:20px;padding:13px}
+  .gate .hello{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:22px;color:var(--head);text-align:center;margin:0 0 4px}
+  .gate .notyou{display:block;text-align:center;font-size:12.5px;color:var(--muted);margin:0 0 6px}
+  .gate .notyou button{background:none;border:none;color:var(--rose);text-decoration:underline;padding:0;font-size:12.5px}
+  .gate .err{display:block;text-align:center;margin-top:12px;min-height:18px}
+  .signout{background:none;border:none;color:var(--muted);text-decoration:underline;font-size:12px;padding:0;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <div class="card">
+    <svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg>
+    <h1>Dani's Updates</h1>
+    <p class="sub">A private page for family &amp; friends.</p>
+    <form id="gateForm" autocomplete="on">
+      <div id="nameFields">
+        <div class="names">
+          <div><label for="fn">First name</label><input type="text" id="fn" autocomplete="given-name" required></div>
+          <div><label for="ln">Last name</label><input type="text" id="ln" autocomplete="family-name" required></div>
+        </div>
+      </div>
+      <div id="nameKnown" class="hidden">
+        <p class="hello" id="hello"></p>
+        <span class="notyou">Not you? <button type="button" id="notYou">Change name</button></span>
+      </div>
+      <label for="pw">Password</label>
+      <input type="password" id="pw" autocomplete="current-password" required>
+      <button class="btn primary" id="go" type="submit">Open updates</button>
+      <span class="err" id="gErr"></span>
+    </form>
+  </div>
+</div>
+
+<div class="wrap hidden" id="app">
+  <header>
+    <img class="portrait hidden" id="portrait" alt="Dani">
+    <span id="hdrLotus"><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg></span>
+    <p class="eyebrow">With love, for</p>
+    <h1>Dani's Updates</h1>
+    <div class="rule"></div>
+    <p class="status" id="status"></p>
+  </header>
+  <nav class="links" id="links"></nav>
+  <p class="help-note hidden" id="helpNote">If you'd like to lend a hand: watching the girls, running an errand, a meal, or help around the house. Whatever fits your week, and never an obligation.</p>
+  <div class="layout" id="layout">
+    <main id="feed"></main>
+    <aside class="side hidden" id="side">
+      <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
+      <section class="card gallery hidden" id="gallery"><h3>Photos</h3><p class="count" id="gCount"></p><div class="grid" id="gGrid"></div></section>
+    </aside>
+  </div>
+  <footer><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg><br>A private page for family &amp; friends. Please don't share the link or password.<br><button class="signout" id="signOut">Sign out on this device</button></footer>
+</div>
+<div class="lightbox hidden" id="lightbox"><img alt=""></div>
+
+<script>
+(() => {
+  const FORM = "https://docs.google.com/forms/d/e/1FAIpQLScqwVjxugY3iJbySzbtVeVTPnGT3mlqLTadoFyHokgfvClg6w/formResponse";
+  const F_FIRST = "entry.273867076", F_LAST = "entry.1518247773";
+  const $ = id => document.getElementById(id);
+  const store = {
+    get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+    set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+    del(k){ try { localStorage.removeItem(k); } catch {} },
+  };
+  let key = null, data = null;
+  const urls = {};
+
+  // ---------- gate ----------
+  function showName(){
+    const f = store.get("du_first"), l = store.get("du_last");
+    const known = !!(f && l);
+    $("nameFields").classList.toggle("hidden", known);
+    $("nameKnown").classList.toggle("hidden", !known);
+    $("fn").required = $("ln").required = !known;
+    if (known) $("hello").textContent = "Welcome back, " + f + ".";
+  }
+  $("notYou").onclick = () => { store.del("du_first"); store.del("du_last"); $("fn").value = $("ln").value = ""; showName(); $("fn").focus(); };
+  showName();
+
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function derive(pw){
+    const meta = await (await fetch("meta.json", {cache:"no-store"})).json();
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(meta.salt), iterations:meta.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  }
+  async function dec(buf){ const u = new Uint8Array(buf); return crypto.subtle.decrypt({name:"AES-GCM", iv:u.slice(0,12)}, key, u.slice(12)); }
+
+  function logVisit(first, last){
+    try {
+      const body = new URLSearchParams(); body.set(F_FIRST, first); body.set(F_LAST, last);
+      fetch(FORM, {method:"POST", mode:"no-cors", body}).catch(()=>{});
+    } catch {}
+  }
+
+  $("gateForm").onsubmit = async e => {
+    e.preventDefault();
+    const first = (store.get("du_first") || $("fn").value).trim();
+    const last = (store.get("du_last") || $("ln").value).trim();
+    const pw = $("pw").value;
+    if (!first || !last){ $("gErr").textContent = "Please enter your first and last name."; return; }
+    $("go").disabled = true; $("go").textContent = "Opening…"; $("gErr").textContent = "";
+    try {
+      key = await derive(pw);
+      const buf = await (await fetch("data.bin", {cache:"no-store"})).arrayBuffer();
+      data = JSON.parse(new TextDecoder().decode(await dec(buf)));
+    } catch {
+      key = null; $("gErr").textContent = "That password didn't work. Please try again.";
+      $("go").disabled = false; $("go").textContent = "Open updates"; return;
+    }
+    store.set("du_first", first); store.set("du_last", last);
+    logVisit(first, last);
+    $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
+    render();
+  };
+  $("signOut").onclick = () => { store.del("du_first"); store.del("du_last"); location.reload(); };
+
+  // ---------- render ----------
+  async function photo(name){
+    if (urls[name]) return urls[name];
+    urls[name] = (async () => {
+      const buf = await (await fetch("img/" + name + ".bin")).arrayBuffer();
+      return URL.createObjectURL(new Blob([await dec(buf)], {type:"image/jpeg"}));
+    })();
+    return urls[name];
+  }
+  function img(name, cls){
+    const im = document.createElement("img"); im.alt = ""; if (cls) im.className = cls;
+    photo(name).then(u => { im.src = u; im.onclick = () => openLight(u); }).catch(()=>{});
+    return im;
+  }
+  const safeUrl = u => (typeof u === "string" && /^https:\/\//i.test(u.trim())) ? u.trim() : "";
+  const fmtDate = (iso, o) => { try { return new Date(iso).toLocaleDateString(undefined, o); } catch { return ""; } };
+
+  function render(){
+    const c = data.config || {}, posts = data.posts || [];
+    $("status").textContent = c.status || "";
+    if (c.portrait){ photo(c.portrait).then(u => { $("portrait").src = u; $("portrait").classList.remove("hidden"); $("hdrLotus").classList.add("hidden"); }).catch(()=>{}); }
+    const links = $("links");
+    const add = (u, label) => { u = safeUrl(u); if (!u) return; const a = document.createElement("a"); a.className = "pill"; a.href = u; a.target = "_blank"; a.rel = "noopener"; const d = document.createElement("span"); d.className = "dot"; a.append(d, label); links.appendChild(a); };
+    add(c.mealTrainUrl, "Meal Train"); add(c.helpUrl, "Sign up to help"); add(c.noteUrl, "Send Dani a note");
+    $("helpNote").classList.toggle("hidden", !safeUrl(c.helpUrl));
+
+    const feed = $("feed");
+    if (!posts.length){ const p = document.createElement("p"); p.className = "empty"; p.textContent = "No updates yet."; feed.appendChild(p); }
+    const all = [];
+    posts.forEach(p => {
+      const art = document.createElement("article"); art.className = "card post"; art.id = "post-" + p.id;
+      const m = document.createElement("p"); m.className = "meta";
+      m.textContent = fmtDate(p.createdAt, {weekday:"long",month:"long",day:"numeric",year:"numeric"}) + (p.byline ? " · " + p.byline : ""); art.appendChild(m);
+      const h = document.createElement("h2"); h.textContent = p.title || "Update"; art.appendChild(h);
+      if (p.body){ const b = document.createElement("p"); b.className = "body"; b.textContent = p.body; art.appendChild(b); }
+      const ph = (p.photos || []).slice(0, 6);
+      if (ph.length){ const g = document.createElement("div"); g.className = "photos n" + ph.length; ph.forEach(n => { g.appendChild(img(n)); all.push(n); }); art.appendChild(g); }
+      feed.appendChild(art);
+    });
+    $("side").classList.toggle("hidden", !posts.length);
+    $("layout").classList.toggle("with-gallery", !!posts.length);
+    $("aCount").textContent = posts.length + (posts.length === 1 ? " update" : " updates");
+    posts.forEach(p => {
+      const li = document.createElement("li"), a = document.createElement("a"); a.href = "#post-" + p.id;
+      const d = document.createElement("span"); d.className = "d"; d.textContent = fmtDate(p.createdAt, {month:"short",day:"numeric",year:"numeric"});
+      const t = document.createElement("span"); t.className = "t"; t.textContent = p.title || "Update";
+      a.append(d, t);
+      a.onclick = e => { e.preventDefault(); const el = $("post-" + p.id); el.scrollIntoView({behavior:"smooth", block:"start"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600); };
+      li.appendChild(a); $("aList").appendChild(li);
+    });
+    $("gallery").classList.toggle("hidden", !all.length);
+    $("gCount").textContent = all.length + (all.length === 1 ? " photo" : " photos");
+    all.forEach(n => $("gGrid").appendChild(img(n)));
+  }
+  function openLight(src){ const lb = $("lightbox"); lb.querySelector("img").src = src; lb.classList.remove("hidden"); }
+  $("lightbox").onclick = () => $("lightbox").classList.add("hidden");
+})();
+</script>
+</body>
+</html>
