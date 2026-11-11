@@ -64,7 +64,10 @@ for p in sorted([q for q in site.get("posts", []) if q.get("status") != "draft"]
         "photos": [r for r in (photo_ref(a) for a in p.get("photos", [])) if r],
     })
 
-plain = json.dumps({"config": cfg, "posts": posts}, sort_keys=True).encode()
+notes = [{"name": n.get("name", ""), "message": n.get("message", ""), "createdAt": n.get("createdAt", "")}
+         for n in sorted(site.get("notes", []), key=lambda n: n.get("createdAt", ""), reverse=True)
+         if not n.get("hidden") and str(n.get("message", "")).strip()]
+plain = json.dumps({"config": cfg, "posts": posts, "notes": notes}, sort_keys=True).encode()
 digest = hashlib.sha256(salt + plain).hexdigest()
 if meta.get("data_hash") != digest or not (out / "data.bin").exists():
     (out / "data.bin").write_bytes(enc(plain)); meta["data_hash"] = digest

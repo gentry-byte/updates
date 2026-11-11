@@ -83,7 +83,7 @@
   .archive .t{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:19px;font-weight:600;line-height:1.25;color:var(--head);transition:color .2s}
   .post{scroll-margin-top:20px}
   .post.flash{box-shadow:0 0 0 2px var(--gold-soft),0 6px 24px rgba(80,60,70,.08);transition:box-shadow .4s}
-  .side h3,.gallery h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0 0 4px}
+  .side h3,.gallery h3{line-height:1.2;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0 0 4px}
   .side .count{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
   .gallery .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
   .gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block;background:var(--rose-soft)}
@@ -132,6 +132,21 @@
   .poster{max-width:520px;margin:-14px auto 36px;text-align:center}
   .poster a{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;background:var(--rose);color:#fff;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:.02em;box-shadow:0 6px 18px rgba(185,122,134,.28)}
   .poster p{color:var(--muted);font-size:12.5px;margin:8px 0 0}
+  .psalm{text-align:center;background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 80%,var(--rose-soft)))}
+  .psalm .psalm-ref{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 12px}
+  .psalm p{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:var(--ink);margin:0 0 9px}
+  .psalm p:last-child{margin:0}
+  .wall .note{border-top:1px solid var(--line);padding:12px 0}
+  .wall .note:first-of-type{border-top:none;padding-top:4px}
+  .wall .msg{font-family:"Cormorant Garamond",Georgia,serif;font-size:18px;line-height:1.45;color:var(--ink);white-space:pre-wrap;margin:0 0 4px}
+  .wall .from{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0}
+  .wall .more{background:none;border:none;color:var(--rose);font-size:13px;padding:6px 0 0;text-decoration:underline}
+  .wall textarea{min-height:110px;margin-top:10px}
+  .wall .thanks{color:var(--muted);font-size:13.5px;font-style:italic;margin:10px 0 0}
+  .wall .hidden-note{opacity:.45}
+  .wall .row{margin-top:10px}
+  .body.clamped{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+  .readmore{background:none;border:none;color:var(--rose);font-weight:600;font-size:14px;padding:8px 0 0;letter-spacing:.02em}
   .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
   .gate .card{width:100%;max-width:400px;text-align:center;padding:40px 32px}
   .gate h1{font-size:44px}
@@ -206,8 +221,26 @@
   <div class="layout" id="layout">
     <main id="feed"></main>
     <aside class="side hidden" id="side">
-      <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
+      <section class="card wall" id="wall"><h3>Words of encouragement</h3><p class="count" id="wCount">Share a verse, a prayer or a kind word for Dani</p>
+        <div id="wList"></div>
+        <button class="more hidden" id="wMore" type="button">See all</button>
+        <div style="margin-top:14px"><button class="btn" id="wOpen" type="button">Share a verse or prayer</button></div>
+        <div class="hidden" id="wForm">
+          <textarea id="wText" maxlength="1000" placeholder="A verse, a prayer, or a few words for Dani"></textarea>
+          <div class="row"><span class="err" id="wErr"></span><button class="btn" id="wCancel" type="button">Cancel</button><button class="btn primary" id="wSend" type="button">Send</button></div>
+        </div>
+        <p class="thanks hidden" id="wThanks"></p>
+      </section>
+            <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
       <section class="card gallery hidden" id="gallery"><h3>Photos</h3><p class="count" id="gCount"></p><div class="grid" id="gGrid"></div></section>
+      <section class="card psalm"><p class="psalm-ref">Psalm 23</p>
+        <p>The LORD is my shepherd; I shall not want.</p>
+        <p>He maketh me to lie down in green pastures: he leadeth me beside the still waters.</p>
+        <p>He restoreth my soul: he leadeth me in the paths of righteousness for his name&rsquo;s sake.</p>
+        <p>Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.</p>
+        <p>Thou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.</p>
+        <p>Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.</p>
+      </section>
     </aside>
   </div>
   <footer><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg><br>A private page for family &amp; friends. Please don't share the link or password.<br><button class="signout" id="signOut">Sign out on this device</button></footer>
@@ -342,13 +375,15 @@
       const m = document.createElement("p"); m.className = "meta";
       m.textContent = fmtDate(p.createdAt, {weekday:"long",month:"long",day:"numeric",year:"numeric"}) + (p.byline ? " · " + p.byline : ""); art.appendChild(m);
       const h = document.createElement("h2"); h.textContent = p.title || "Update"; art.appendChild(h);
-      if (p.body){ const b = document.createElement("p"); b.className = "body"; b.textContent = p.body; art.appendChild(b); }
+      if (p.body){ const b = document.createElement("p"); b.className = "body"; b.textContent = p.body; art.appendChild(b);
+        if (p.body.length > 450 || p.body.split("\n").length > 8){ b.classList.add("clamped"); const rm = document.createElement("button"); rm.className = "readmore"; rm.type = "button"; rm.textContent = "Read more"; rm.onclick = () => { const c = b.classList.toggle("clamped"); rm.textContent = c ? "Read more" : "Show less"; }; art.appendChild(rm); } }
       const ph = (p.photos || []).slice(0, 6);
       if (ph.length){ const g = document.createElement("div"); g.className = "photos n" + ph.length; ph.forEach(n => { g.appendChild(img(n)); all.push(n); }); art.appendChild(g); }
       feed.appendChild(art);
     });
-    $("side").classList.toggle("hidden", !posts.length);
-    $("layout").classList.toggle("with-gallery", !!posts.length);
+    $("side").classList.remove("hidden");
+    renderNotes(data.notes || [], false);
+    $("layout").classList.add("with-gallery");
     $("aCount").textContent = posts.length + (posts.length === 1 ? " update" : " updates");
     posts.forEach(p => {
       const li = document.createElement("li"), a = document.createElement("a"); a.href = "#post-" + p.id;
@@ -362,6 +397,40 @@
     $("gCount").textContent = all.length + (all.length === 1 ? " photo" : " photos");
     all.forEach(n => $("gGrid").appendChild(img(n)));
   }
+
+  function renderNotes(notes, admin, onToggle){
+    const list = $("wList"); list.textContent = "";
+    const show = admin ? notes : notes.filter(n => !n.hidden);
+    const visible = notes.filter(n => !n.hidden).length;
+    $("wCount").textContent = visible ? visible + (visible === 1 ? " message" : " messages") : (admin ? "No messages yet" : "Share a verse, a prayer or a kind word for Dani");
+    const expanded = $("wMore").dataset.open === "1";
+    show.forEach((n, i) => {
+      const d = document.createElement("div"); d.className = "note" + (n.hidden ? " hidden-note" : "");
+      if (!expanded && i >= 3) d.classList.add("hidden");
+      const m = document.createElement("p"); m.className = "msg"; m.textContent = n.message || ""; d.appendChild(m);
+      const f = document.createElement("p"); f.className = "from";
+      let when = ""; try { when = new Date(n.createdAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}); } catch {}
+      f.textContent = (n.name || "A friend") + (when ? " · " + when : "") + (n.hidden ? " · hidden" : ""); d.appendChild(f);
+      if (admin && onToggle){ const b = document.createElement("button"); b.className = "btn tiny"; b.style.marginTop = "6px"; b.textContent = n.hidden ? "Show" : "Hide"; b.onclick = () => onToggle(n, b); d.appendChild(b); }
+      list.appendChild(d);
+    });
+    $("wMore").classList.toggle("hidden", show.length <= 3);
+    $("wMore").textContent = expanded ? "Show fewer" : "See all " + show.length;
+  }
+  const WALL_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSfOp45BbtN5GA-aytikh5SnP0UClq0CzzfbDPhYuSkZLF9nTQ/formResponse";
+  $("wMore").onclick = () => { $("wMore").dataset.open = $("wMore").dataset.open === "1" ? "" : "1"; renderNotes((data && data.notes) || [], false); };
+  $("wOpen").onclick = () => { $("wForm").classList.remove("hidden"); $("wOpen").classList.add("hidden"); $("wThanks").classList.add("hidden"); $("wText").focus(); };
+  $("wCancel").onclick = () => { $("wForm").classList.add("hidden"); $("wOpen").classList.remove("hidden"); };
+  $("wSend").onclick = () => {
+    const msg = $("wText").value.trim();
+    if (!msg){ $("wErr").textContent = "Please write a message."; return; }
+    const first = store.get("du_first") || "", last = store.get("du_last") || "";
+    try { const body = new URLSearchParams(); body.set("entry.1148264042", (first + " " + last).trim()); body.set("entry.238677170", msg); fetch(WALL_FORM, {method:"POST", mode:"no-cors", body}).catch(()=>{}); } catch {}
+    $("wText").value = ""; $("wErr").textContent = "";
+    $("wForm").classList.add("hidden"); $("wOpen").classList.remove("hidden");
+    $("wThanks").textContent = "Thank you" + (first ? ", " + first : "") + ". Your message will appear here at the next refresh (7:40am or 5:40pm).";
+    $("wThanks").classList.remove("hidden");
+  };
   function openLight(src){ const lb = $("lightbox"); lb.querySelector("img").src = src; lb.classList.remove("hidden"); }
   $("lightbox").onclick = () => $("lightbox").classList.add("hidden");
 })();
