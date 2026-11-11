@@ -115,6 +115,9 @@
   .up-row{display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
   .up-row button{border:none;background:none;color:var(--muted);font-size:18px;padding:0 4px}
   .glance textarea{min-height:110px}
+  .poster{max-width:520px;margin:-14px auto 36px;text-align:center}
+  .poster a{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;background:var(--rose);color:#fff;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:.02em;box-shadow:0 6px 18px rgba(185,122,134,.28)}
+  .poster p{color:var(--muted);font-size:12.5px;margin:8px 0 0}
   .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
   .gate .card{width:100%;max-width:400px;text-align:center;padding:40px 32px}
   .gate h1{font-size:44px}
@@ -164,6 +167,7 @@
     <div class="rule"></div>
     <p class="status" id="status"></p>
   </header>
+  <div class="poster hidden" id="poster"><a id="posterLink" target="_blank" rel="noopener">✎&nbsp; Post an update</a><p id="posterNote"></p></div>
   <nav class="links" id="links"></nav>
   <p class="help-note hidden" id="helpNote">Want to lend a hand? Click <strong>Sign up to help</strong> above and add your name to a day: watching the girls, an errand, a meal, or help around the house. Whatever fits your week, never an obligation.</p>
   <section class="glance hidden" id="glance">
@@ -299,6 +303,13 @@
   function render(){
     const c = data.config || {}, posts = data.posts || [];
     $("status").textContent = c.status || "";
+    const POSTERS = {"valerie bell":"Valerie","dani craig":"Dani","danielle craig":"Dani","gentry craig":"Gentry"};
+    const who = POSTERS[((store.get("du_first")||"") + " " + (store.get("du_last")||"")).trim().toLowerCase().replace(/\s+/g," ")];
+    if (who && safeUrl(c.postFormUrl)){
+      $("posterLink").href = safeUrl(c.postFormUrl);
+      $("posterNote").textContent = "Only you see this, " + who + ". Gentry reviews each post before it goes live.";
+      $("poster").classList.remove("hidden");
+    }
     renderGlance(c, false);
     if (c.portrait){ photo(c.portrait).then(u => { $("portrait").src = u; $("portrait").classList.remove("hidden"); $("hdrLotus").classList.add("hidden"); }).catch(()=>{}); }
     const links = $("links");
