@@ -101,6 +101,20 @@
   header,.links,.admin-bar,#settings,#composer,footer,.help-note{margin-left:auto!important;margin-right:auto!important}
   @media (max-width:520px){ h1{font-size:42px} .card{padding:24px 20px} .post::before{left:20px;right:20px} }
 
+.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:760px;margin:0 auto 36px}
+  .glance .card{margin:0;padding:22px 24px}
+  .glance .mini-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
+  .glance h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0}
+  .glance ul{list-style:none;margin:0;padding:0}
+  .glance li{padding:7px 0;border-top:1px solid var(--line);display:flex;gap:12px;align-items:baseline}
+  .glance li:first-child{border-top:none}
+  .glance .when{flex:0 0 auto;min-width:86px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .glance .need::before{content:"";flex:0 0 6px;height:6px;border-radius:50%;background:var(--rose);margin-top:9px}
+  .glance .muted{color:var(--muted);font-style:italic;font-size:14px}
+  .btn.tiny{padding:4px 12px;font-size:12px}
+  .up-row{display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+  .up-row button{border:none;background:none;color:var(--muted);font-size:18px;padding:0 4px}
+  .glance textarea{min-height:110px}
   .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
   .gate .card{width:100%;max-width:400px;text-align:center;padding:40px 32px}
   .gate h1{font-size:44px}
@@ -145,13 +159,32 @@
   <header>
     <img class="portrait hidden" id="portrait" alt="Dani">
     <span id="hdrLotus"><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg></span>
-    <p class="eyebrow">With love for</p>
+    <p class="eyebrow">With love</p>
     <h1>Dani's Updates</h1>
     <div class="rule"></div>
     <p class="status" id="status"></p>
   </header>
   <nav class="links" id="links"></nav>
   <p class="help-note hidden" id="helpNote">Want to lend a hand? Click <strong>Sign up to help</strong> above and add your name to a day: watching the girls, an errand, a meal, or help around the house. Whatever fits your week, never an obligation.</p>
+  <section class="glance hidden" id="glance">
+    <div class="card hidden" id="upCard">
+      <div class="mini-h"><h3>Upcoming</h3><button class="btn tiny hidden" id="upEdit">Edit</button></div>
+      <ul id="upList"></ul>
+      <div class="hidden" id="upEditor">
+        <div id="upRows"></div>
+        <button class="btn tiny" id="upAdd" type="button">+ Add a date</button>
+        <div class="row"><span class="err" id="upErr"></span><button class="btn" id="upCancel">Cancel</button><button class="btn primary" id="upSave">Save</button></div>
+      </div>
+    </div>
+    <div class="card hidden" id="needCard">
+      <div class="mini-h"><h3>Current needs</h3><button class="btn tiny hidden" id="needEdit">Edit</button></div>
+      <ul id="needList"></ul>
+      <div class="hidden" id="needEditor">
+        <textarea id="needText" placeholder="One need per line, e.g.&#10;Rides to KU on Tuesdays&#10;Groceries this weekend"></textarea>
+        <div class="row"><span class="err" id="needErr"></span><button class="btn" id="needCancel">Cancel</button><button class="btn primary" id="needSave">Save</button></div>
+      </div>
+    </div>
+  </section>
   <div class="layout" id="layout">
     <main id="feed"></main>
     <aside class="side hidden" id="side">
@@ -242,9 +275,31 @@
   const safeUrl = u => (typeof u === "string" && /^https:\/\//i.test(u.trim())) ? u.trim() : "";
   const fmtDate = (iso, o) => { try { return new Date(iso).toLocaleDateString(undefined, o); } catch { return ""; } };
 
+  function upcomingItems(c){
+    const t = new Date(); const today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    return (Array.isArray(c.upcoming) ? c.upcoming : [])
+      .filter(u => u && typeof u.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(u.date) && typeof u.text === "string" && u.text.trim())
+      .map(u => { const [y,m,d] = u.date.split("-").map(Number); return {when: new Date(y, m-1, d), text: u.text.trim(), date: u.date}; })
+      .filter(u => u.when >= today).sort((a,b) => a.when - b.when);
+  }
+  function needItems(c){ return (typeof c.needs === "string" ? c.needs : "").split("\n").map(s => s.trim()).filter(Boolean); }
+  function renderGlance(c, admin){
+    const ups = upcomingItems(c), needs = needItems(c);
+    const ul = $("upList"); ul.textContent = "";
+    if (ups.length) ups.forEach(u => { const li = document.createElement("li"); const w = document.createElement("span"); w.className = "when"; w.textContent = u.when.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); const tx = document.createElement("span"); tx.textContent = u.text; li.append(w, tx); ul.appendChild(li); });
+    else { const li = document.createElement("li"); li.className = "muted"; li.textContent = "Nothing scheduled yet."; ul.appendChild(li); }
+    const nl = $("needList"); nl.textContent = "";
+    if (needs.length) needs.forEach(n => { const li = document.createElement("li"); li.className = "need"; const tx = document.createElement("span"); tx.textContent = n; li.appendChild(tx); nl.appendChild(li); });
+    else { const li = document.createElement("li"); li.className = "muted"; li.textContent = "No needs listed right now."; nl.appendChild(li); }
+    const showUp = admin || ups.length > 0, showNeed = admin || needs.length > 0;
+    $("upCard").classList.toggle("hidden", !showUp);
+    $("needCard").classList.toggle("hidden", !showNeed);
+    $("glance").classList.toggle("hidden", !(showUp || showNeed));
+  }
   function render(){
     const c = data.config || {}, posts = data.posts || [];
     $("status").textContent = c.status || "";
+    renderGlance(c, false);
     if (c.portrait){ photo(c.portrait).then(u => { $("portrait").src = u; $("portrait").classList.remove("hidden"); $("hdrLotus").classList.add("hidden"); }).catch(()=>{}); }
     const links = $("links");
     const add = (u, label) => { u = safeUrl(u); if (!u) return; const a = document.createElement("a"); a.className = "pill"; a.href = u; a.target = "_blank"; a.rel = "noopener"; const d = document.createElement("span"); d.className = "dot"; a.append(d, label); links.appendChild(a); };
