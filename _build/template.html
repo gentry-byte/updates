@@ -115,10 +115,11 @@
   header,.links,.admin-bar,#settings,#composer,footer,.help-note{margin-left:auto!important;margin-right:auto!important}
   @media (max-width:520px){ h1{font-size:42px} .card{padding:24px 20px} .post::before{left:20px;right:20px} }
 
-.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:760px;margin:0 auto 36px}
+.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1000px;margin:0 auto 36px;align-items:start}
+  .glance .count{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:-4px 0 12px}
   .glance .card{margin:0;padding:22px 24px}
   .glance .mini-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
-  .glance h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0}
+  .glance h3{line-height:1.2;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:24px;color:var(--head);margin:0}
   .glance ul{list-style:none;margin:0;padding:0}
   .glance li{padding:7px 0;border-top:1px solid var(--line);display:flex;gap:12px;align-items:baseline}
   .glance li:first-child{border-top:none}
@@ -231,11 +232,7 @@
         <div class="row"><span class="err" id="needErr"></span><button class="btn" id="needCancel">Cancel</button><button class="btn primary" id="needSave">Save</button></div>
       </div>
     </div>
-  </section>
-  <div class="layout" id="layout">
-    <main id="feed"></main>
-    <aside class="side hidden" id="side">
-      <section class="card wall" id="wall"><h3>Words of encouragement</h3><p class="count" id="wCount">Share a verse, a prayer or a kind word for Dani</p>
+    <section class="card wall" id="wall"><h3>Words of encouragement</h3><p class="count" id="wCount">Share a verse, a prayer or a kind word for Dani</p>
         <div id="wList"></div>
         <button class="more hidden" id="wMore" type="button">See all</button>
         <div style="margin-top:14px"><button class="btn" id="wOpen" type="button">Share a verse or prayer</button></div>
@@ -245,7 +242,11 @@
         </div>
         <p class="thanks hidden" id="wThanks"></p>
       </section>
-            <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
+  </section>
+  <div class="layout" id="layout">
+    <main id="feed"></main>
+    <aside class="side hidden" id="side">
+      <section class="card archive"><h3>Past updates</h3><p class="count" id="aCount"></p><ol id="aList"></ol></section>
       <section class="card gallery hidden" id="gallery"><h3>Photos</h3><p class="count" id="gCount"></p><div class="grid" id="gGrid"></div></section>
       <section class="card psalm psalm-side"><p class="psalm-ref">Psalm 23 · WEB</p>
         <p>The LORD is my shepherd; I shall lack nothing.</p>
@@ -359,7 +360,7 @@
     const showUp = admin || ups.length > 0, showNeed = admin || needs.length > 0;
     $("upCard").classList.toggle("hidden", !showUp);
     $("needCard").classList.toggle("hidden", !showNeed);
-    $("glance").classList.toggle("hidden", !(showUp || showNeed));
+    $("glance").classList.remove("hidden");
   }
   function render(){
     const c = data.config || {}, posts = data.posts || [];
@@ -378,7 +379,7 @@
    
     if (safeUrl(c.mealTrainUrl)) add(c.mealTrainUrl, "Meal Train");
     else { const sp = document.createElement("span"); sp.className = "pill soon"; const d = document.createElement("span"); d.className = "dot"; const em = document.createElement("em"); em.textContent = "· coming soon"; sp.append(d, "Meal Train", em); links.appendChild(sp); }
-    add(c.helpUrl, "Sign up to help"); add(c.noteUrl, "Send Dani a note");
+    add(c.helpUrl, "Sign up to help");
     $("helpNote").classList.toggle("hidden", !safeUrl(c.helpUrl));
 
     const feed = $("feed");
