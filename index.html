@@ -155,8 +155,7 @@
   .top{position:relative}
   .psalm-top{display:none}
   @media (min-width:1400px){
-    .psalm-top{display:block;position:absolute;top:0;left:calc(50% + 330px);width:330px;margin:0;padding:22px 24px;text-align:left}
-    #glance{margin-top:96px}
+    .psalm-top{display:block;position:absolute;top:0;left:auto;right:calc((100% - 100vw) / 2 + 28px);width:330px;margin:0;padding:22px 24px;text-align:left}
     .psalm-top .psalm-ref{text-align:left}
     .psalm-top p.v{font-size:18px;line-height:1.45;margin:0}
     .psalm-top sup{font-family:Montserrat,sans-serif;font-style:normal;font-size:10px;color:var(--gold);font-weight:600;margin-right:2px}
@@ -317,6 +316,7 @@
     if (Date.now() - lastLog > 6 * 3600 * 1000){ logVisit(first, last); store.set("du_logged", String(Date.now())); }
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
     render();
+    requestAnimationFrame(fitPsalm);
   }
   (async () => {
     const kb = store.get("du_key"), exp = Number(store.get("du_exp") || 0), first = store.get("du_first"), last = store.get("du_last");
@@ -484,6 +484,18 @@
     $("wThanks").textContent = "Thank you" + (first ? ", " + first : "") + ". Your message will appear here at the next refresh (7:40am or 5:40pm).";
     $("wThanks").classList.remove("hidden");
   };
+
+  function fitPsalm(){
+    const ps = document.querySelector(".psalm-top"), gl = $("glance");
+    if (!ps || !gl) return;
+    gl.style.marginTop = "";
+    if (getComputedStyle(ps).display === "none" || gl.classList.contains("hidden")) return;
+    const need = ps.getBoundingClientRect().bottom + 24 - gl.getBoundingClientRect().top;
+    if (need > 0) gl.style.marginTop = need + "px";
+  }
+  addEventListener("resize", fitPsalm);
+  if (document.fonts) document.fonts.ready.then(fitPsalm);
+  setInterval(fitPsalm, 1500);
   function openLight(src){ const lb = $("lightbox"); lb.querySelector("img").src = src; lb.classList.remove("hidden"); }
   $("lightbox").onclick = () => $("lightbox").classList.add("hidden");
 })();
