@@ -115,7 +115,9 @@
   header,.links,.admin-bar,#settings,#composer,footer,.help-note{margin-left:auto!important;margin-right:auto!important}
   @media (max-width:520px){ h1{font-size:42px} .card{padding:24px 20px} .post::before{left:20px;right:20px} }
 
-.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1000px;margin:0 auto 36px;align-items:start}
+.glance{display:grid;grid-template-columns:1fr;gap:18px;max-width:1000px;margin:0 auto 36px;align-items:stretch}
+  @media (min-width:860px){ .glance{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  .glance > .card{display:flex;flex-direction:column}
   .glance .count{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:-4px 0 12px}
   .glance .card{margin:0;padding:22px 24px}
   .glance .mini-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
@@ -141,6 +143,8 @@
   .wall .note:first-of-type{border-top:none;padding-top:4px}
   .wall .msg{font-family:"Cormorant Garamond",Georgia,serif;font-size:18px;line-height:1.45;color:var(--ink);white-space:pre-wrap;margin:0 0 4px}
   .wall .from{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0}
+  .wall .note.short .msg{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .glance .count{margin-top:6px!important}
   .wall .more{background:none;border:none;color:var(--rose);font-size:13px;padding:6px 0 0;text-decoration:underline}
   .wall textarea{min-height:110px;margin-top:10px}
   .wall .thanks{color:var(--muted);font-size:13.5px;font-style:italic;margin:10px 0 0}
@@ -453,7 +457,8 @@
     const expanded = $("wMore").dataset.open === "1";
     show.forEach((n, i) => {
       const d = document.createElement("div"); d.className = "note" + (n.hidden ? " hidden-note" : "");
-      if (!expanded && i >= 3) d.classList.add("hidden");
+      if (!expanded && i >= 2) d.classList.add("hidden");
+      if (!expanded) d.classList.add("short");
       const m = document.createElement("p"); m.className = "msg"; m.textContent = n.message || ""; d.appendChild(m);
       const f = document.createElement("p"); f.className = "from";
       let when = ""; try { when = new Date(n.createdAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}); } catch {}
@@ -461,8 +466,8 @@
       if (admin && onToggle){ const b = document.createElement("button"); b.className = "btn tiny"; b.style.marginTop = "6px"; b.textContent = n.hidden ? "Show" : "Hide"; b.onclick = () => onToggle(n, b); d.appendChild(b); }
       list.appendChild(d);
     });
-    $("wMore").classList.toggle("hidden", show.length <= 3);
-    $("wMore").textContent = expanded ? "Show fewer" : "See all " + show.length;
+    $("wMore").classList.toggle("hidden", show.length <= 2 && !show.some(n => (n.message || "").length > 140));
+    $("wMore").textContent = expanded ? "Show fewer" : (show.length > 2 ? "See all " + show.length : "Read more");
   }
   const WALL_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSfOp45BbtN5GA-aytikh5SnP0UClq0CzzfbDPhYuSkZLF9nTQ/formResponse";
   $("wMore").onclick = () => { $("wMore").dataset.open = $("wMore").dataset.open === "1" ? "" : "1"; renderNotes((data && data.notes) || [], false); };
