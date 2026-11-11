@@ -57,7 +57,7 @@ if cfg.get("portraitId"):
     cfg["portrait"] = photo_ref(cfg["portraitId"])
 cfg.pop("portraitId", None)
 posts = []
-for p in sorted(site.get("posts", []), key=lambda p: p.get("createdAt", ""), reverse=True):
+for p in sorted([q for q in site.get("posts", []) if q.get("status") != "draft"], key=lambda p: p.get("createdAt", ""), reverse=True):
     posts.append({
         "id": p["id"], "title": p.get("title", ""), "body": p.get("body", ""),
         "byline": p.get("byline", ""), "createdAt": p.get("createdAt", ""),
