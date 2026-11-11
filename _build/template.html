@@ -258,7 +258,7 @@
       </section>
     </aside>
   </div>
-  <footer><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg><br>A private page for family &amp; friends. Please don't share the link or password.<br><button class="signout" id="signOut">Sign out on this device</button></footer>
+  <footer><svg class="lotus" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M32 4c-6 7-6 20 0 30 6-10 6-23 0-30Z"/><path d="M32 34C26 26 18 22 10 22c2 7 10 12 22 12Z"/><path d="M32 34c6-8 14-12 22-12-2 7-10 12-22 12Z"/><path d="M32 34C22 30 12 24 4 14c0 12 12 20 28 20Z" opacity=".55"/><path d="M32 34c10-4 20-10 28-20 0 12-12 20-28 20Z" opacity=".55"/><path d="M14 38h36" opacity=".6"/></svg><br>A private page for family &amp; friends. Please don't share the link or password. This device stays signed in for 30 days.<br><button class="signout" id="signOut">Sign out on this device</button></footer>
 </div>
 <div class="lightbox hidden" id="lightbox"><img alt=""></div>
 
@@ -291,8 +291,41 @@
   async function derive(pw){
     const meta = await (await fetch("meta.json", {cache:"no-store"})).json();
     const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
-    return crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(meta.salt), iterations:meta.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+    const k = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(meta.salt), iterations:meta.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, true, ["decrypt"]);
+    return {k, salt: meta.salt};
   }
+  const REMEMBER_MS = 30 * 24 * 3600 * 1000;
+  async function remember(k, salt){
+    try {
+      const raw = new Uint8Array(await crypto.subtle.exportKey("raw", k));
+      store.set("du_key", btoa(String.fromCharCode(...raw))); store.set("du_salt", salt); store.set("du_exp", String(Date.now() + REMEMBER_MS));
+    } catch {}
+  }
+  function forget(){ store.del("du_key"); store.del("du_salt"); store.del("du_exp"); }
+  async function openWith(k){
+    key = k;
+    const buf = await (await fetch("data.bin", {cache:"no-store"})).arrayBuffer();
+    data = JSON.parse(new TextDecoder().decode(await dec(buf)));
+  }
+  function show(first, last){
+    const lastLog = Number(store.get("du_logged") || 0);
+    if (Date.now() - lastLog > 6 * 3600 * 1000){ logVisit(first, last); store.set("du_logged", String(Date.now())); }
+    $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
+    render();
+  }
+  (async () => {
+    const kb = store.get("du_key"), exp = Number(store.get("du_exp") || 0), first = store.get("du_first"), last = store.get("du_last");
+    if (!kb || !first || !last || Date.now() > exp) { forget(); return; }
+    $("gate").style.visibility = "hidden";
+    try {
+      const meta = await (await fetch("meta.json", {cache:"no-store"})).json();
+      if (meta.salt !== store.get("du_salt")) throw 0;
+      const k = await crypto.subtle.importKey("raw", b64(kb), {name:"AES-GCM"}, true, ["decrypt"]);
+      await openWith(k);
+      show(first, last);
+    } catch { forget(); key = null; data = null; }
+    $("gate").style.visibility = "";
+  })();
   async function dec(buf){ const u = new Uint8Array(buf); return crypto.subtle.decrypt({name:"AES-GCM", iv:u.slice(0,12)}, key, u.slice(12)); }
 
   function logVisit(first, last){
@@ -310,19 +343,18 @@
     if (!first || !last){ $("gErr").textContent = "Please enter your first and last name."; return; }
     $("go").disabled = true; $("go").textContent = "Opening…"; $("gErr").textContent = "";
     try {
-      key = await derive(pw);
-      const buf = await (await fetch("data.bin", {cache:"no-store"})).arrayBuffer();
-      data = JSON.parse(new TextDecoder().decode(await dec(buf)));
+      const d = await derive(pw);
+      await openWith(d.k);
+      await remember(d.k, d.salt);
     } catch {
       key = null; $("gErr").textContent = "That password didn't work. Please try again.";
       $("go").disabled = false; $("go").textContent = "Open updates"; return;
     }
     store.set("du_first", first); store.set("du_last", last);
-    logVisit(first, last);
-    $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
-    render();
+    store.del("du_logged");
+    show(first, last);
   };
-  $("signOut").onclick = () => { store.del("du_first"); store.del("du_last"); location.reload(); };
+  $("signOut").onclick = () => { store.del("du_first"); store.del("du_last"); store.del("du_logged"); forget(); location.reload(); };
 
   // ---------- render ----------
   async function photo(name){
