@@ -407,7 +407,6 @@
     const add = (u, label) => { u = safeUrl(u); if (!u) return; const a = document.createElement("a"); a.className = "pill"; a.href = u; a.target = "_blank"; a.rel = "noopener"; const d = document.createElement("span"); d.className = "dot"; a.append(d, label); links.appendChild(a); };
    
     if (safeUrl(c.mealTrainUrl)) add(c.mealTrainUrl, "Meal Train");
-    else { const sp = document.createElement("span"); sp.className = "pill soon"; const d = document.createElement("span"); d.className = "dot"; const em = document.createElement("em"); em.textContent = "· coming soon"; sp.append(d, "Meal Train", em); links.appendChild(sp); }
     add(c.helpUrl, "Sign up to help");
     $("helpNote").classList.toggle("hidden", !safeUrl(c.helpUrl));
 
